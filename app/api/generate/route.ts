@@ -3,13 +3,10 @@ import Anthropic from "@anthropic-ai/sdk";
 import { Redis } from "@upstash/redis";
 import Stripe from "stripe";
 
-const redis = Redis.fromEnv();
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-04-22.dahlia",
-});
-
 export async function GET(req: NextRequest) {
+  const redis = Redis.fromEnv();
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-04-22.dahlia" });
   const { searchParams } = new URL(req.url);
   const stripeSessionId = searchParams.get("stripe_session_id");
   const directSessionId = searchParams.get("s");
