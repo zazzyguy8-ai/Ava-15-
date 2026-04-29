@@ -5,7 +5,13 @@ import ReactMarkdown from "react-markdown";
 
 type Status = "loading" | "streaming" | "done" | "error";
 
-export function StreamingPlan({ sessionId }: { sessionId: string }) {
+export function StreamingPlan({
+  planParam,
+  isEncoded,
+}: {
+  planParam: string;
+  isEncoded: boolean;
+}) {
   const [content, setContent] = useState("");
   const [status, setStatus] = useState<Status>("loading");
   const [errorMsg, setErrorMsg] = useState("");
@@ -15,7 +21,8 @@ export function StreamingPlan({ sessionId }: { sessionId: string }) {
     if (hasFetched.current) return;
     hasFetched.current = true;
 
-    const es = new EventSource(`/api/generate?s=${encodeURIComponent(sessionId)}`);
+    const paramKey = isEncoded ? "a" : "s";
+    const es = new EventSource(`/api/generate?${paramKey}=${encodeURIComponent(planParam)}`);
 
     es.onmessage = (e: MessageEvent) => {
       if (e.data === "[DONE]") {
@@ -53,7 +60,7 @@ export function StreamingPlan({ sessionId }: { sessionId: string }) {
     };
 
     return () => es.close();
-  }, [sessionId]);
+  }, [planParam]);
 
   if (status === "loading") {
     return (

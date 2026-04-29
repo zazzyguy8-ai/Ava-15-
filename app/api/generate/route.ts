@@ -4,14 +4,25 @@ import { getSession } from "@/lib/sessions";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const sessionId = searchParams.get("s");
 
-  if (!sessionId) return sseError("Missing session ID.");
+  let answers: Record<string, string>;
 
-  const mem = getSession(sessionId);
-  if (!mem) return sseError("Session not found or expired. Please retake the quiz.");
-
-  const answers: Record<string, string> = JSON.parse(mem.answers);
+  const answersEncoded = searchParams.get("a");
+  if (answersEncoded) {
+    try {
+      const json = Buffer.from(decodeURIComponent(answersEncoded), "base64").toString("utf8");
+      answers = JSON.parse(json);
+    } catch {
+      return sseError("Invalid answers data. Please retake the quiz.");
+    }
+  } else {
+    // Legacy: session-ID-based lookup
+    const sessionId = searchParams.get("s");
+    if (!sessionId) return sseError("Missing session data.");
+    const mem = getSession(sessionId);
+    if (!mem) return sseError("Session not found or expired. Please retake the quiz.");
+    answers = JSON.parse(mem.answers);
+  }
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const encoder = new TextEncoder();

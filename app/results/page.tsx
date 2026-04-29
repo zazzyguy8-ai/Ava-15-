@@ -5,11 +5,12 @@ import { PrintButton } from "./PrintButton";
 export default async function ResultsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ s?: string }>;
+  searchParams: Promise<{ s?: string; a?: string }>;
 }) {
-  const { s: sessionId } = await searchParams;
+  const { s: sessionId, a: answersEncoded } = await searchParams;
+  const planParam = answersEncoded ?? sessionId;
 
-  if (!sessionId) {
+  if (!planParam) {
     return (
       <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(160deg,#13080f,#1e0d1a)" }}>
         <div style={{ textAlign: "center" }}>
@@ -59,7 +60,7 @@ export default async function ResultsPage({
           </div>
 
           <div className="res-card">
-            <StreamingPlan sessionId={sessionId} />
+            <StreamingPlan planParam={planParam} isEncoded={!!answersEncoded} />
           </div>
 
           <Link href="/" className="res-back">← Back to ALVA 15</Link>

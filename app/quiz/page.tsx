@@ -30,14 +30,11 @@ export default function QuizPage() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch("/api/save-answers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: latest }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed");
-      router.push(`/results?s=${data.sessionId}`);
+      const json = JSON.stringify(latest);
+      const bytes = new TextEncoder().encode(json);
+      const binary = Array.from(bytes).map(b => String.fromCharCode(b)).join("");
+      const encoded = btoa(binary);
+      router.push(`/results?a=${encodeURIComponent(encoded)}`);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
       setError(msg);
