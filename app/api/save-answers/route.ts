@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import { Redis } from "@upstash/redis";
 import { randomUUID } from "crypto";
+import { saveSession } from "@/lib/sessions";
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,12 +8,11 @@ export async function POST(req: NextRequest) {
     if (!answers || typeof answers !== "object") {
       return Response.json({ error: "Invalid answers" }, { status: 400 });
     }
-    const redis = Redis.fromEnv();
     const sessionId = randomUUID();
-    await redis.set(`session:${sessionId}`, JSON.stringify(answers), { ex: 86400 });
+    saveSession(sessionId, answers);
     return Response.json({ sessionId });
   } catch (err) {
     console.error("save-answers error:", err);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return Response.json({ error: "Server error: " + String(err) }, { status: 500 });
   }
 }

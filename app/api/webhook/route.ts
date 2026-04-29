@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
-import { Redis } from "@upstash/redis";
+import { markPaid } from "@/lib/sessions";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -12,17 +12,14 @@ export async function POST(req: NextRequest) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-04-22.dahlia" });
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
-    console.error("Webhook signature error:", err);
+    console.error("Webhook error:", err);
     return Response.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const sessionId = session.metadata?.sessionId;
-    if (sessionId) {
-      const redis = Redis.fromEnv();
-      await redis.set(`session:${sessionId}:paid`, "true", { ex: 86400 * 7 });
-    }
+    const s = event.data.object as Stripe.Checkout.Session;
+    const sessionId = s.metadata?.sessionId;
+    if (sessionId) markPaid(sessionId);
   }
 
   return Response.json({ received: true });

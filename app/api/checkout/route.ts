@@ -1,11 +1,23 @@
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
+import { getSession } from "@/lib/sessions";
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const sessionId = formData.get("sessionId") as string;
     if (!sessionId) return Response.json({ error: "Missing sessionId" }, { status: 400 });
+
+    // Get answers from memory to back them up in Stripe metadata
+    const session = getSession(sessionId);
+    const answers = session?.answers ?? "{}";
+
+    // Split answers into chunks ≤500 chars (Stripe metadata limit per value)
+    const chunks: Record<string, string> = { sessionId };
+    const chunkSize = 490;
+    for (let i = 0; i * chunkSize < answers.length; i++) {
+      chunks[`ans${i}`] = answers.slice(i * chunkSize, (i + 1) * chunkSize);
+    }
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-04-22.dahlia" });
     const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -23,7 +35,7 @@ export async function POST(req: NextRequest) {
         },
         quantity: 1,
       }],
-      metadata: { sessionId },
+      metadata: chunks,
       success_url: `${origin}/results?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/preview?s=${sessionId}`,
     });
@@ -31,6 +43,6 @@ export async function POST(req: NextRequest) {
     return Response.redirect(checkoutSession.url!, 303);
   } catch (err) {
     console.error("checkout error:", err);
-    return Response.json({ error: "Could not create checkout session" }, { status: 500 });
+    return Response.json({ error: "Could not create checkout: " + String(err) }, { status: 500 });
   }
 }
