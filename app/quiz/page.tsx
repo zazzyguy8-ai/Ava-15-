@@ -37,7 +37,7 @@ export default function QuizPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
-      router.push(`/preview?s=${data.sessionId}`);
+      router.push(`/results?s=${data.sessionId}`);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
       setError(msg);
