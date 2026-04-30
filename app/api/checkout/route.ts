@@ -1,48 +1,47 @@
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
-import { getSession } from "@/lib/sessions";
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const sessionId = formData.get("sessionId") as string;
-    if (!sessionId) return Response.json({ error: "Missing sessionId" }, { status: 400 });
-
-    // Get answers from memory to back them up in Stripe metadata
-    const session = getSession(sessionId);
-    const answers = session?.answers ?? "{}";
-
-    // Split answers into chunks ≤500 chars (Stripe metadata limit per value)
-    const chunks: Record<string, string> = { sessionId };
-    const chunkSize = 490;
-    for (let i = 0; i * chunkSize < answers.length; i++) {
-      chunks[`ans${i}`] = answers.slice(i * chunkSize, (i + 1) * chunkSize);
+    const answersEncoded = formData.get("a") as string;
+    if (!answersEncoded) {
+      return Response.json({ error: "Missing answers" }, { status: 400 });
     }
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-04-22.dahlia" });
-    const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    // Decode to extract email for metadata
+    let email = "";
+    try {
+      const json = Buffer.from(decodeURIComponent(answersEncoded), "base64").toString("utf8");
+      const answers = JSON.parse(json);
+      email = answers.email ?? "";
+    } catch {}
 
-    const checkoutSession = await stripe.checkout.sessions.create({
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-04-22.dahlia" });
+    const origin = req.headers.get("origin") ?? process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+
+    // Split answersEncoded into ≤490-char chunks for Stripe metadata
+    const chunks: Record<string, string> = {};
+    const chunkSize = 490;
+    for (let i = 0; i * chunkSize < answersEncoded.length; i++) {
+      chunks[`a${i}`] = answersEncoded.slice(i * chunkSize, (i + 1) * chunkSize);
+    }
+
+    const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: [{
-        price_data: {
-          currency: "usd",
-          unit_amount: 1999,
-          product_data: {
-            name: "ALVA 15 — Your Personalized 30-Day Health Plan",
-            description: "AI-generated daily health routines tailored for women 40–60",
-          },
-        },
+        price: process.env.STRIPE_PRICE_ID!,
         quantity: 1,
       }],
-      metadata: chunks,
-      success_url: `${origin}/results?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/preview?s=${sessionId}`,
+      customer_email: email || undefined,
+      metadata: { email, ...chunks },
+      success_url: `${origin}/results?cs={CHECKOUT_SESSION_ID}&a=${encodeURIComponent(answersEncoded)}`,
+      cancel_url: `${origin}/preview?a=${encodeURIComponent(answersEncoded)}`,
     });
 
-    return Response.redirect(checkoutSession.url!, 303);
+    return Response.redirect(session.url!, 303);
   } catch (err) {
-    console.error("checkout error:", err);
+    console.error("Checkout error:", err);
     return Response.json({ error: "Could not create checkout: " + String(err) }, { status: 500 });
   }
 }

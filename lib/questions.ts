@@ -3,6 +3,7 @@ export type Question = {
   text: string;
   type: "choice" | "text";
   options?: string[];
+  placeholder?: string;
 };
 
 export const questions: Question[] = [
@@ -148,5 +149,11 @@ export const questions: Question[] = [
     id: "ideal_morning",
     text: "Describe your ideal morning in a few words (or how your mornings usually feel):",
     type: "text",
+  },
+  {
+    id: "email",
+    text: "Where should we send your plan?",
+    type: "text",
+    placeholder: "your@email.com",
   },
 ];

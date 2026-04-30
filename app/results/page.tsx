@@ -1,26 +1,35 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import Stripe from "stripe";
 import { StreamingPlan } from "./StreamingPlan";
 import { PrintButton } from "./PrintButton";
 
 export default async function ResultsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ s?: string; a?: string }>;
+  searchParams: Promise<{ cs?: string; a?: string }>;
 }) {
-  const { s: sessionId, a: answersEncoded } = await searchParams;
-  const planParam = answersEncoded ?? sessionId;
+  const { cs: checkoutSessionId, a: answersEncoded } = await searchParams;
 
-  if (!planParam) {
-    return (
-      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(160deg,#13080f,#1e0d1a)" }}>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "rgba(255,255,255,.4)", marginBottom: 20 }}>No session found.</p>
-          <Link href="/quiz" style={{ padding: "12px 28px", borderRadius: 99, background: "linear-gradient(135deg,#a04060,#c9627a)", color: "#fff", textDecoration: "none", fontWeight: 600, fontSize: ".9rem" }}>
-            Take the quiz →
-          </Link>
-        </div>
-      </div>
-    );
+  // Must have answers to generate anything
+  if (!answersEncoded) {
+    redirect("/quiz");
+  }
+
+  // Verify Stripe payment
+  if (checkoutSessionId) {
+    try {
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-04-22.dahlia" });
+      const session = await stripe.checkout.sessions.retrieve(checkoutSessionId);
+      if (session.payment_status !== "paid") {
+        redirect(`/preview?a=${encodeURIComponent(answersEncoded)}`);
+      }
+    } catch {
+      redirect(`/preview?a=${encodeURIComponent(answersEncoded)}`);
+    }
+  } else {
+    // No checkout session → send to preview/payment
+    redirect(`/preview?a=${encodeURIComponent(answersEncoded)}`);
   }
 
   return (
@@ -60,7 +69,7 @@ export default async function ResultsPage({
           </div>
 
           <div className="res-card">
-            <StreamingPlan planParam={planParam} isEncoded={!!answersEncoded} />
+            <StreamingPlan planParam={answersEncoded} isEncoded={true} />
           </div>
 
           <Link href="/" className="res-back">← Back to ALVA 15</Link>

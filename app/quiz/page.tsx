@@ -34,7 +34,7 @@ export default function QuizPage() {
       const bytes = new TextEncoder().encode(json);
       const binary = Array.from(bytes).map(b => String.fromCharCode(b)).join("");
       const encoded = btoa(binary);
-      router.push(`/results?a=${encodeURIComponent(encoded)}`);
+      router.push(`/preview?a=${encodeURIComponent(encoded)}`);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
       setError(msg);
@@ -194,8 +194,8 @@ export default function QuizPage() {
 
           {q.type === "text" && (
             <>
-              <input className="q-input" type="text" value={current}
-                placeholder="Type your answer…"
+              <input className="q-input" type={q.id === "email" ? "email" : "text"} value={current}
+                placeholder={q.placeholder ?? "Type your answer…"}
                 autoFocus
                 onChange={e => setAnswers(p => ({ ...p, [q.id]: e.target.value }))}
                 onKeyDown={e => e.key === "Enter" && current.trim() && go({ ...answers, [q.id]: current })}
