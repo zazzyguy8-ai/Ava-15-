@@ -45,7 +45,8 @@ export async function GET(req: NextRequest) {
         controller.close();
       } catch (err) {
         console.error("Generation error:", err);
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "Generation failed. Check ANTHROPIC_API_KEY." })}\n\n`));
+        const msg = err instanceof Error ? err.message : String(err);
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         controller.close();
       }
