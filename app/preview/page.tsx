@@ -132,8 +132,12 @@ export default async function PreviewPage({
 
           {/* CTA */}
           <div className="pv-cta">
-            <div className="pv-price">$4.99</div>
-            <p className="pv-price-note">One-time · No subscription · Instant access</p>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 12, marginBottom: 4 }}>
+              <span style={{ fontSize: "1.1rem", color: "rgba(255,255,255,.3)", textDecoration: "line-through" }}>$19.99</span>
+              <div className="pv-price">$4.99</div>
+              <span style={{ fontSize: ".7rem", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", color: "#c9627a", padding: "4px 10px", borderRadius: 99, background: "rgba(201,98,122,.15)" }}>Launch offer</span>
+            </div>
+            <p className="pv-price-note">One-time · No subscription · 30-day money-back guarantee</p>
 
             <form action="/api/checkout" method="POST">
               <input type="hidden" name="a" value={answersEncoded} />
