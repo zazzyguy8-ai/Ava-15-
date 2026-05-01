@@ -37,19 +37,19 @@ export default async function ResultsPage({
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
         * { box-sizing: border-box; }
-        body { margin: 0; background: linear-gradient(160deg,#13080f 0%,#1e0d1a 60%,#0e0a0f 100%); }
-        .res-wrap { min-height: 100dvh; font-family: Inter, sans-serif; color: #fff; }
-        .res-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; background: rgba(19,8,15,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(201,98,122,.12); }
-        .res-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; background: linear-gradient(135deg,#e8a0b0,#d4a96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        body { margin: 0; background: #fdf8f5; }
+        .res-wrap { min-height: 100dvh; font-family: Inter, sans-serif; color: #1e0f17; }
+        .res-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; background: rgba(253,248,245,.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(201,98,122,.1); }
+        .res-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; background: linear-gradient(135deg,#c9627a,#a87c2a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .res-main { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
         .res-header { text-align: center; margin-bottom: 40px; }
-        .res-badge { display: inline-block; font-size: .68rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; background: rgba(212,169,106,.1); border: 1px solid rgba(212,169,106,.25); color: #d4a96a; margin-bottom: 16px; }
-        .res-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 700; margin: 0 0 10px; line-height: 1.2; }
-        .res-sub { font-size: .85rem; color: rgba(255,255,255,.35); margin: 0; }
-        .res-card { background: rgba(255,255,255,.03); border: 1px solid rgba(201,98,122,.15); border-radius: 24px; padding: 32px 28px; }
+        .res-badge { display: inline-block; font-size: .68rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; background: rgba(168,124,42,.08); border: 1px solid rgba(168,124,42,.2); color: #a87c2a; margin-bottom: 16px; }
+        .res-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 700; margin: 0 0 10px; line-height: 1.2; color: #1e0f17; }
+        .res-sub { font-size: .85rem; color: rgba(42,21,32,.38); margin: 0; }
+        .res-card { background: #fff; border: 1px solid rgba(201,98,122,.12); border-radius: 24px; padding: 32px 28px; box-shadow: 0 4px 24px rgba(201,98,122,.07); }
         @media(max-width: 600px) { .res-card { padding: 24px 18px; border-radius: 18px; } }
-        .res-back { display: block; text-align: center; margin-top: 32px; font-size: .8rem; color: rgba(255,255,255,.25); text-decoration: none; transition: color .2s; }
-        .res-back:hover { color: rgba(255,255,255,.5); }
+        .res-back { display: block; text-align: center; margin-top: 32px; font-size: .8rem; color: rgba(42,21,32,.28); text-decoration: none; transition: color .2s; }
+        .res-back:hover { color: rgba(42,21,32,.5); }
         @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         .res-header { animation: fadeUp .6s ease both; }
         .res-card { animation: fadeUp .6s .15s ease both; }

@@ -25,36 +25,36 @@ export default async function PreviewPage({
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
         * { box-sizing: border-box; }
-        body { margin: 0; background: linear-gradient(160deg,#13080f 0%,#1e0d1a 60%,#0e0a0f 100%); }
-        .pv-wrap { min-height: 100dvh; font-family: Inter, sans-serif; color: #fff; }
-        .pv-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; background: rgba(19,8,15,.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(201,98,122,.12); }
-        .pv-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; background: linear-gradient(135deg,#e8a0b0,#d4a96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .pv-badge { font-size: .68rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; background: rgba(212,169,106,.1); border: 1px solid rgba(212,169,106,.25); color: #d4a96a; }
+        body { margin: 0; background: #fdf8f5; }
+        .pv-wrap { min-height: 100dvh; font-family: Inter, sans-serif; color: #1e0f17; }
+        .pv-nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; background: rgba(253,248,245,.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(201,98,122,.1); }
+        .pv-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; background: linear-gradient(135deg,#c9627a,#a87c2a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .pv-badge { font-size: .68rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; background: rgba(168,124,42,.08); border: 1px solid rgba(168,124,42,.2); color: #a87c2a; }
         .pv-main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
         .pv-header { text-align: center; margin-bottom: 44px; animation: fadeUp .6s ease both; }
-        .pv-title { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem,5vw,2.8rem); font-weight: 700; line-height: 1.2; margin: 0 0 14px; }
-        .pv-sub { font-size: .9rem; color: rgba(255,255,255,.4); margin: 0; }
-        .pv-card { background: rgba(255,255,255,.03); border: 1px solid rgba(201,98,122,.15); border-radius: 24px; padding: 28px 24px; margin-bottom: 20px; animation: fadeUp .6s .1s ease both; }
+        .pv-title { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem,5vw,2.8rem); font-weight: 700; line-height: 1.2; margin: 0 0 14px; color: #1e0f17; }
+        .pv-sub { font-size: .9rem; color: rgba(42,21,32,.42); margin: 0; }
+        .pv-card { background: #fff; border: 1px solid rgba(201,98,122,.12); border-radius: 24px; padding: 28px 24px; margin-bottom: 20px; box-shadow: 0 2px 16px rgba(201,98,122,.06); animation: fadeUp .6s .1s ease both; }
         .pv-week-label { font-size: .65rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #c9627a; margin-bottom: 10px; }
-        .pv-week-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
-        .pv-week-desc { font-size: .87rem; color: rgba(255,255,255,.5); line-height: 1.7; margin: 0; }
+        .pv-week-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; color: #1e0f17; }
+        .pv-week-desc { font-size: .87rem; color: rgba(42,21,32,.52); line-height: 1.7; margin: 0; }
         .pv-locked { position: relative; overflow: hidden; }
-        .pv-locked-inner { filter: blur(4px); pointer-events: none; user-select: none; opacity: .5; }
+        .pv-locked-inner { filter: blur(4px); pointer-events: none; user-select: none; opacity: .4; }
         .pv-lock-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
-        .pv-lock-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(201,98,122,.15); border: 1px solid rgba(201,98,122,.3); display: flex; align-items: center; justify-content: center; }
-        .pv-lock-text { font-size: .75rem; color: rgba(255,255,255,.4); }
-        .pv-includes { background: rgba(255,255,255,.03); border: 1px solid rgba(201,98,122,.12); border-radius: 24px; padding: 28px 24px; margin-bottom: 32px; animation: fadeUp .6s .2s ease both; }
-        .pv-includes h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; margin: 0 0 18px; }
+        .pv-lock-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(201,98,122,.1); border: 1px solid rgba(201,98,122,.25); display: flex; align-items: center; justify-content: center; }
+        .pv-lock-text { font-size: .75rem; color: rgba(42,21,32,.4); }
+        .pv-includes { background: #fff; border: 1px solid rgba(201,98,122,.1); border-radius: 24px; padding: 28px 24px; margin-bottom: 32px; box-shadow: 0 2px 16px rgba(201,98,122,.05); animation: fadeUp .6s .2s ease both; }
+        .pv-includes h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; margin: 0 0 18px; color: #1e0f17; }
         .pv-includes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         @media(max-width:480px) { .pv-includes-grid { grid-template-columns: 1fr; } }
-        .pv-inc-item { display: flex; align-items: flex-start; gap: 10px; font-size: .84rem; color: rgba(255,255,255,.55); line-height: 1.5; }
-        .pv-inc-check { width: 18px; height: 18px; border-radius: 50%; background: rgba(201,98,122,.18); color: #e8a0b0; font-size: .7rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+        .pv-inc-item { display: flex; align-items: flex-start; gap: 10px; font-size: .84rem; color: rgba(42,21,32,.55); line-height: 1.5; }
+        .pv-inc-check { width: 18px; height: 18px; border-radius: 50%; background: rgba(201,98,122,.1); color: #c9627a; font-size: .7rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
         .pv-cta { text-align: center; animation: fadeUp .6s .3s ease both; }
-        .pv-price { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 700; line-height: 1; }
-        .pv-price-note { font-size: .8rem; color: rgba(255,255,255,.3); margin: 6px 0 24px; }
-        .pv-btn { display: inline-block; padding: 18px 48px; border-radius: 99px; background: linear-gradient(135deg,#a04060,#c9627a); color: #fff; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 8px 32px rgba(201,98,122,.35); letter-spacing: .02em; transition: transform .15s, box-shadow .15s; text-decoration: none; }
+        .pv-price { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 700; line-height: 1; color: #1e0f17; }
+        .pv-price-note { font-size: .8rem; color: rgba(42,21,32,.35); margin: 6px 0 24px; }
+        .pv-btn { display: inline-block; padding: 18px 48px; border-radius: 99px; background: linear-gradient(135deg,#a04060,#c9627a); color: #fff; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 8px 28px rgba(201,98,122,.3); letter-spacing: .02em; transition: transform .15s; text-decoration: none; }
         .pv-btn:active { transform: scale(.97); }
-        .pv-trust { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 18px; font-size: .75rem; color: rgba(255,255,255,.25); }
+        .pv-trust { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 18px; font-size: .75rem; color: rgba(42,21,32,.28); }
         @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
       `}</style>
 
